@@ -1,0 +1,6 @@
+Version 1.1
+- now asynchronous
+- added VT_PLUGIN_CNTR_LM_SENSORS_AMPLITUDE
+
+Version 1.0
+- initial check-in

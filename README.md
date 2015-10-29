@@ -38,7 +38,7 @@ To compile this plugin, you need:
 To make sensors available to your system, you should start the tool `sensors-detect` as root and
 follow the instructions on the screen. Use it at your own risk ;).
 
-`SCOREP_PLUGIN_CNTR_METRIC` specifies the software events that shall be recorded when tracing an
+`SCOREP_METRIC_SENSORS_PLUGIN` specifies the software events that shall be recorded when tracing an
 application. The available events highly depend on your system. Compile and run `print_sensors.c`,
 which events are supported. Use the `Plugin ID`s provided to add the events to your plugin counter
 metrics.

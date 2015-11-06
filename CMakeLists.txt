@@ -45,6 +45,6 @@ set(CMAKE_C_FLAGS_RELEASE "-Os")
 
 link_directories(${CMAKE_SOURCE_DIR})
 add_library(${PROJECT_NAME} SHARED ${PLUGIN_SOURCE})
-target_link_libraries(sensors_plugin pthread ${LIBSENSORS_NAME})
+target_link_libraries(${PROJECT_NAME} pthread ${LIBSENSORS_NAME})
 
 install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)

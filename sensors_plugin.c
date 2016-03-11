@@ -1,22 +1,28 @@
 /*
-libSensPlugin.so,
-a library to count libsensors values in VampirTrace
-Copyright (C) 2010 TU Dresden, ZIH
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
+ * Copyright (c) 2016, Technische Universität Dresden, Germany
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
+ *    and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+ *    and the following disclaimer in the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
+ *    or promote products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+ * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include <scorep/SCOREP_MetricPlugins.h>
@@ -59,56 +65,56 @@ int thread_finished;
 
 /* used to get the timer from Score-P */
 void set_timer( uint64_t (*timer)(void)){
-	wtime=timer;
+    wtime=timer;
 }
 
 /* thread function that reads sensors information on a regular base */
 void * thread_report(void * ignored){
-	int retVal=0;
-	/* we have to report uint64_t, but read double */
-	union{
-	    double dbl;
-	    uint64_t uint64;
-	} value;
-	thread_finished=0;
-	/* as long as finalize isn't called from Score-P */
-	while (counter_enabled){
-		int i=0;
-		if (wtime==NULL) continue;
-	  pthread_mutex_lock(&read_mutex);
-		for (i=0; i< added_sensor_counters; i++ ){
-		    // buffer size not sufficient?
-		    // if so increase buffersize
-		    if (nr_results[i]==max_results[i]){
-		      SCOREP_MetricTimeValuePair * reallocated;
-		      reallocated = realloc(results[i],nr_results[i]*2*sizeof(SCOREP_MetricTimeValuePair));
-		      /* if reallocation failed */
-		      if (reallocated == NULL){
-		        fprintf(stderr, "Score-P Sensors Plugin: failed to allocate more memory for results.\n"
-		            "Stopping Sensor measurement after %d readings",nr_results[i]);
-		        counter_enabled = 0;
-		      }
-		      else {
-		        /* allocation ok */
-		        results[i] = reallocated;
-		      }
-		      max_results[i]=nr_results[i]*2;
-		    }
-		    /* read values and store them in array */
-		    results[i][nr_results[i]].timestamp=wtime();
-				if (sensors_get_value(sensor_counters[i].chip,
-				                    sensor_counters[i].subFeature->number,
-				                    &value.dbl)<0)
-				  /* TODO find better way then atof() */
-				  value.dbl=atof("NaN");
-				results[i][nr_results[i]].value=value.uint64;
-		    nr_results[i]++;
-		}
-		pthread_mutex_unlock(&read_mutex);
-		usleep(period);
-	}
-	thread_finished=1;
-	return NULL;
+    int retVal=0;
+    /* we have to report uint64_t, but read double */
+    union{
+        double dbl;
+        uint64_t uint64;
+    } value;
+    thread_finished=0;
+    /* as long as finalize isn't called from Score-P */
+    while (counter_enabled){
+        int i=0;
+        if (wtime==NULL) continue;
+      pthread_mutex_lock(&read_mutex);
+        for (i=0; i< added_sensor_counters; i++ ){
+            // buffer size not sufficient?
+            // if so increase buffersize
+            if (nr_results[i]==max_results[i]){
+              SCOREP_MetricTimeValuePair * reallocated;
+              reallocated = realloc(results[i],nr_results[i]*2*sizeof(SCOREP_MetricTimeValuePair));
+              /* if reallocation failed */
+              if (reallocated == NULL){
+                fprintf(stderr, "Score-P Sensors Plugin: failed to allocate more memory for results.\n"
+                    "Stopping Sensor measurement after %d readings",nr_results[i]);
+                counter_enabled = 0;
+              }
+              else {
+                /* allocation ok */
+                results[i] = reallocated;
+              }
+              max_results[i]=nr_results[i]*2;
+            }
+            /* read values and store them in array */
+            results[i][nr_results[i]].timestamp=wtime();
+                if (sensors_get_value(sensor_counters[i].chip,
+                                    sensor_counters[i].subFeature->number,
+                                    &value.dbl)<0)
+                  /* TODO find better way then atof() */
+                  value.dbl=atof("NaN");
+                results[i][nr_results[i]].value=value.uint64;
+            nr_results[i]++;
+        }
+        pthread_mutex_unlock(&read_mutex);
+        usleep(period);
+    }
+    thread_finished=1;
+    return NULL;
 }
 
 int32_t init()

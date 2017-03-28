@@ -1,8 +1,8 @@
-#Score-P libsensors Plugin Counter
+# Score-P libsensors Plugin Counter
 
-##Compilation and Installation
+## Compilation and Installation
 
-###Prerequisites
+### Prerequisites
 
 To compile this plugin, you need:
 
@@ -14,7 +14,7 @@ To compile this plugin, you need:
 
 * `libsensors` (including development files)
 
-###Building
+### Building
 
 1. Create build directory
 
@@ -33,7 +33,7 @@ To compile this plugin, you need:
 
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
 
-##Usage
+## Usage
 
 To make sensors available to your system, you should start the tool `sensors-detect` as root and
 follow the instructions on the screen. Use it at your own risk ;).
@@ -84,7 +84,7 @@ E.g.
 Experienced `libsensors` users may pass another sensors config-file by setting the environment
 variable `SCOREP_METRIC_SENSORS_PLUGIN_FILE` to the config-files location.
 
-###Environment variables
+### Environment variables
 
 * `SCOREP_METRIC_SENSORS_PLUGIN_FILE` (default=none)
 
@@ -94,7 +94,7 @@ variable `SCOREP_METRIC_SENSORS_PLUGIN_FILE` to the config-files location.
 
     Set the amplitude to read the sensors (in usecs).
 
-###If anything fails
+### If anything fails
 
 1. Check whether the plugin library can be loaded from the `LD_LIBRARY_PATH`.
 
@@ -106,6 +106,6 @@ variable `SCOREP_METRIC_SENSORS_PLUGIN_FILE` to the config-files location.
 
 4. Write a mail to the author.
 
-##Authors
+## Authors
 
 * Robert Schoene (robert.schoene at tu-dresden dot de)

@@ -79,7 +79,7 @@ Load the PC plugin library:
 
 E.g.
 
-    export SCOREP_METRIC_SENSORS_PLUGIN="Core 0/temp1_input:Core 1/temp1_input"
+    export SCOREP_METRIC_SENSORS_PLUGIN="Core 0/temp1_input,Core 1/temp1_input"
 
 Experienced `libsensors` users may pass another sensors config-file by setting the environment
 variable `SCOREP_METRIC_SENSORS_PLUGIN_FILE` to the config-files location.

@@ -1,0 +1,48 @@
+{
+  "nodes": {
+    "nix-scorep": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1705676679,
+        "narHash": "sha256-1L5tyA3rcOsgX9Y6K7JBDZyAei7pHS6WDYIcpltJyfE=",
+        "owner": "s9105947",
+        "repo": "nix-scorep",
+        "rev": "aba00622270651587ead32714217971b865e4db8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "s9105947",
+        "repo": "nix-scorep",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1705458851,
+        "narHash": "sha256-uQvEhiv33Zj/Pv364dTvnpPwFSptRZgVedDzoM+HqVg=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "8bf65f17d8070a0a490daf5f1c784b87ee73982c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nix-scorep": "nix-scorep",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

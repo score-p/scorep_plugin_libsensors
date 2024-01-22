@@ -6,6 +6,8 @@ set(SENSORS_DIR "" CACHE STRING "Path to libsensors directory")
 set(SENSORS_INC "" CACHE STRING "Path to libsensors headers")
 set(SENSORS_LIB "" CACHE STRING "Path to libsensors")
 
+option(BUILD_PRINT_SENSORS_BINARY "build helper program to list all available sensors" ON)
+
 set(PLUGIN_SOURCE sensors_plugin.c)
 
 include(common/FindScorep.cmake)
@@ -38,7 +40,6 @@ else()
     message(SEND_ERROR "sensors/sensors.h not found, but required, use -DSENSORS_DIR or -DSENSORS_INC!")
 endif()
 
-
 #additional c flags
 set(CMAKE_C_FLAGS "-D_GNU_SOURCE -g -std=gnu99 -pthread")
 #debugging c flags
@@ -53,5 +54,19 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     "${SENSORS_INC_DIR}")
 target_link_directories(${PROJECT_NAME} PUBLIC
     "${SENSORS_LIB_DIR}")
-
 install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
+
+if (BUILD_PRINT_SENSORS_BINARY)
+    add_executable(scorep-plugin-libsensors-print-sensors print_sensors.c)
+    target_link_libraries(scorep-plugin-libsensors-print-sensors PUBLIC
+        ${LIBSENSORS_NAME}
+        m) # -lm equivalent
+    target_include_directories(scorep-plugin-libsensors-print-sensors PRIVATE
+        "${SENSORS_INC_DIR}")
+    target_link_directories(scorep-plugin-libsensors-print-sensors PUBLIC
+        "${SENSORS_LIB_DIR}")
+    install(
+        TARGETS scorep-plugin-libsensors-print-sensors
+        DESTINATION bin)
+endif()
+

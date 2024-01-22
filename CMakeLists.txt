@@ -26,7 +26,11 @@ if(SENSORS_INC_DIR)
     else()
         set(LIBSENSORS_NAME libsensors.so)
     endif()
-    find_path(SENSORS_LIB_DIR ${LIBSENSORS_NAME} HINTS ${SENSORS_LIB} ${SENSORS_DIR}/include ENV LD_LIBRARY_PATH DOC "Path to ${LIBSENSORS_NAME}")
+    find_path(
+        SENSORS_LIB_DIR ${LIBSENSORS_NAME}
+        HINTS ${SENSORS_LIB} ${SENSORS_DIR}/include ${SENSORS_DIR}/lib
+        ENV LD_LIBRARY_PATH
+        DOC "Path to ${LIBSENSORS_NAME}")
     if (NOT SENSORS_LIB_DIR)
         message(SEND_ERROR "${LIBSENSORS_NAME} not found, but required, use -DSENSORS_DIR or -DSENSORS_LIB!")
     endif ()

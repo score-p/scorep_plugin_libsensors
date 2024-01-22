@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 project(sensors_plugin)
 
 option(SENSORS_STATIC "Link libsensors statically." ON)
-option(SENSORS_DIR "Path to libsensors directory" "")
-option(SENSORS_INC "Path to libsensors headers" "")
-option(SENSORS_LIB "Path to libsensors" "")
+set(SENSORS_DIR "" CACHE STRING "Path to libsensors directory")
+set(SENSORS_INC "" CACHE STRING "Path to libsensors headers")
+set(SENSORS_LIB "" CACHE STRING "Path to libsensors")
 
 set(PLUGIN_SOURCE sensors_plugin.c)
 

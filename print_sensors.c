@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <sensors/sensors.h>
 
-int main(char **arv, int argc)
+int main(int, char**)
 {
   int chipNr=0;
   int featureNr=0;

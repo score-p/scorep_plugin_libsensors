@@ -41,9 +41,7 @@ export SCOREP_METRIC_SENSORS_PLUGIN="$TEST_METRIC_NAME"
 
 SCOREP_EXPERIMENT_DIRECTORY=trace_with_plugin ./sleep5
 test -d trace_with_plugin || (echo '[!!] scorep did not create trace (with plugin)' >&2 && exit 1)
-
-test -d trace_no_plugin || (echo '[!!] scorep did not create trace (without plugin)' >&2 && exit 1)
-test -f trace_no_plugin/traces.otf2 || (echo '[!!] no trace file found (run without plugin)' >&2 && exit 1)
+test -f trace_with_plugin/traces.otf2 || (echo '[!!] no trace file found (run with plugin)' >&2 && exit 1)
 
 (otf2-print trace_with_plugin/traces.otf2 | sed -n -e '/^METRIC/p' | grep "$TEST_METRIC_NAME" >/dev/null) || (echo '[!!] trace does not contain metric '"$TEST_METRIC_NAME" >&2 && exit 1)
 

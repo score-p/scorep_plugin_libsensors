@@ -62,6 +62,7 @@ static pthread_mutex_t read_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static pthread_t thread;
 static int thread_finished;
+static int thread_active;
 
 /* used to get the timer from Score-P */
 static void scorep_plugin_libsensors_set_timer( uint64_t (*timer)(void)){
@@ -149,6 +150,7 @@ static int32_t scorep_plugin_libsensors_init()
   counter_enabled=1;
   thread=0;
   thread_finished=1;
+  thread_active=0;
   return 0;
 }
 
@@ -248,7 +250,15 @@ SCOREP_Metric_Plugin_MetricProperties * scorep_plugin_libsensors_get_event_info(
 static void scorep_plugin_libsensors_fini()
 {
   counter_enabled=0;
-  pthread_join(thread, NULL);
+  if (1 == thread_active) {
+    int ret = pthread_join(thread, NULL);
+    if (0 != ret) {
+      fprintf(stderr, "failed to clean up measurement thread (%d): %s\n",
+              ret, strerror(errno));
+    }
+    thread_active=0;
+  }
+  pthread_mutex_destroy(&read_mutex);
   sensors_cleanup();
 }
 
@@ -304,11 +314,13 @@ static int32_t scorep_plugin_libsensors_add_counter(char * event_name)
     return -ENOMEM;
   }
   // are all events added?
-  if (added_sensor_counters == number_sensors)
+  if (added_sensor_counters == number_sensors) {
     if (pthread_create(&thread, NULL, &scorep_plugin_libsensors_thread_report, NULL)){
       fprintf(stderr, "Score-P Sensors Plugin: Unable to start measurement thread.\n");
       return -ECHILD;
     }
+    thread_active=1;
+  }
 
   return added_sensor_counters-1;
 }

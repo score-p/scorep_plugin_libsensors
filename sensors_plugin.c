@@ -152,7 +152,7 @@ static int32_t scorep_plugin_libsensors_init()
   return 0;
 }
 
-SCOREP_Metric_Plugin_MetricProperties * get_event_info(char * event_name)
+SCOREP_Metric_Plugin_MetricProperties * scorep_plugin_libsensors_get_event_info(char * event_name)
 {
   int chipNr=0;
   int featureNr=0;

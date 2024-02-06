@@ -307,7 +307,7 @@ static int32_t scorep_plugin_libsensors_add_counter(char * event_name)
   }
   // are all events added?
   if (added_sensor_counters == number_sensors)
-    if (pthread_create(&thread, NULL, &thread_report, NULL)){
+    if (pthread_create(&thread, NULL, &scorep_plugin_libsensors_thread_report, NULL)){
       fprintf(stderr, "Score-P Sensors Plugin: Unable to start measurement thread.\n");
       return -ECHILD;
     }
@@ -315,7 +315,7 @@ static int32_t scorep_plugin_libsensors_add_counter(char * event_name)
   return added_sensor_counters-1;
 }
 
-static uint64_t get_all_values( int32_t                      id,
+static uint64_t scorep_plugin_libsensors_get_all_values( int32_t                      id,
                          SCOREP_MetricTimeValuePair** time_value_list ){
   int saved_nr_results;
   pthread_mutex_lock(&read_mutex);

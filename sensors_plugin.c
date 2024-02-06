@@ -248,9 +248,7 @@ SCOREP_Metric_Plugin_MetricProperties * scorep_plugin_libsensors_get_event_info(
 static void scorep_plugin_libsensors_fini()
 {
   counter_enabled=0;
-  if ( thread != 0 ) {
-    pthread_join(thread, NULL);
-  }
+  pthread_join(thread, NULL);
   sensors_cleanup();
 }
 

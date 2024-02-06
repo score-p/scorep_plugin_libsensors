@@ -60,16 +60,16 @@ static int period = 1000000;
 
 static pthread_mutex_t read_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-pthread_t thread;
-int thread_finished;
+static pthread_t thread;
+static int thread_finished;
 
 /* used to get the timer from Score-P */
-void set_timer( uint64_t (*timer)(void)){
+static void scorep_plugin_libsensors_set_timer( uint64_t (*timer)(void)){
     wtime=timer;
 }
 
 /* thread function that reads sensors information on a regular base */
-void * thread_report(void * ignored){
+static void * scorep_plugin_libsensors_thread_report(void * ignored){
     int retVal=0;
     /* we have to report uint64_t, but read double */
     union{
@@ -117,7 +117,7 @@ void * thread_report(void * ignored){
     return NULL;
 }
 
-int32_t init()
+static int32_t scorep_plugin_libsensors_init()
 {
   char * from_env;
   int i;
@@ -245,15 +245,16 @@ SCOREP_Metric_Plugin_MetricProperties * get_event_info(char * event_name)
     return return_values;
 }
 
-void fini()
+static void scorep_plugin_libsensors_fini()
 {
   counter_enabled=0;
-  pthread_join(thread, NULL);
-  pthread_mutex_destroy(&read_mutex);
+  if ( thread != 0 ) {
+    pthread_join(thread, NULL);
+  }
   sensors_cleanup();
 }
 
-int32_t add_counter(char * event_name)
+static int32_t scorep_plugin_libsensors_add_counter(char * event_name)
 {
   int chipNr=0;
   int featureNr=0;
@@ -314,7 +315,7 @@ int32_t add_counter(char * event_name)
   return added_sensor_counters-1;
 }
 
-uint64_t get_all_values( int32_t                      id,
+static uint64_t get_all_values( int32_t                      id,
                          SCOREP_MetricTimeValuePair** time_value_list ){
   int saved_nr_results;
   pthread_mutex_lock(&read_mutex);
@@ -345,12 +346,12 @@ SCOREP_METRIC_PLUGIN_ENTRY( sensors_plugin )
     info.run_per                      = SCOREP_METRIC_PER_HOST;
     info.sync                         = SCOREP_METRIC_ASYNC;
     info.delta_t                      = UINT64_MAX;
-    info.initialize                   = init;
-    info.finalize                     = fini;
-    info.get_event_info               = get_event_info;
-    info.add_counter                  = add_counter;
-    info.get_all_values               = get_all_values;
-    info.set_clock_function           = set_timer;
+    info.initialize                   = scorep_plugin_libsensors_init;
+    info.finalize                     = scorep_plugin_libsensors_fini;
+    info.get_event_info               = scorep_plugin_libsensors_get_event_info;
+    info.add_counter                  = scorep_plugin_libsensors_add_counter;
+    info.get_all_values               = scorep_plugin_libsensors_get_all_values;
+    info.set_clock_function           = scorep_plugin_libsensors_set_timer;
 
     return info;
 }
